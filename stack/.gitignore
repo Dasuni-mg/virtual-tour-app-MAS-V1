@@ -1,0 +1,19 @@
+*.js
+!jest.config.js
+*.d.ts
+node_modules
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+
+# Avoid uploading host files to remote
+vt-host-bucket/
+
+# Source files should remain intact
+!appsync/**/*.*
+!lambda/**/*.*
+!vt-host-bucket/errors/
+
+# Exclude any config files
+lambda/**/config.js

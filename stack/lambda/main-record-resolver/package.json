@@ -1,0 +1,10 @@
+{
+    "name": "main-login-trigger",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "ISC",
+    "dependencies": {
+      "aws-jwt-verify": "^3.1.0"
+    }
+  }
+  

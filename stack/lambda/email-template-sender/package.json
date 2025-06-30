@@ -1,0 +1,11 @@
+{
+  "name": "email-template-parser",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-crypto/client-node": "^3.1.1",
+    "luxon": "^3.1.1",
+    "mimetext": "^2.0.10"
+  }
+}

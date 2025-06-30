@@ -1,0 +1,251 @@
+type AllocatedTour {
+  userId: String!
+  tourId: ID!
+  tour: Tour!
+}
+
+type AllocatedTourConnection {
+  item: [AllocatedTour]
+  nextToken: String
+}
+
+type Cluster {
+  id: ID!
+  name: String!
+  tours(nextToken: String, limit: Int): TourConnection
+}
+
+type Company {
+  name: String!
+  external: Boolean!
+}
+
+type Meeting {
+  id: ID!
+  userId: String!
+  title: String!
+  date: AWSDateTime!
+  participants: [String]
+  tourId: ID!
+  tour: Tour!
+}
+
+type MeetingConnection {
+  item: [Meeting]
+  nextToken: String
+}
+
+type SignInRecord {
+  name: String!
+  count: Int!
+}
+
+type TourAccessRecord {
+  id: ID!
+  name: String!
+  count: Int!
+}
+
+type Latest {
+  totalSignIn: Int!
+  totalTourAccess: Int
+  mostTourAccess: TourAccessRecord
+  rankedSignIn: [SignInRecord]
+  rankedTourAccess: [TourAccessRecord]
+}
+
+type Log {
+  recordedAt: AWSDateTime!
+  recordType: String!
+  userName: String!
+  extra: AWSJSON
+}
+
+type LogConnection {
+  item: [Log]
+  nextToken: AWSJSON
+}
+
+input DateRange {
+  from: AWSDate!
+  to: AWSDate!
+}
+
+input FilterInput {
+  names: [String!]
+  emails: [String!]
+  groups: [String!]
+  countries: [String!]
+  companies: [String!]
+  latest: DateRange
+  enabled: Boolean
+}
+
+type Mutation {
+  createMeeting(
+    title: String!
+    date: AWSDateTime!
+    tourId: ID!
+    participants: [String]
+  ): Meeting
+  createUser(
+    username: String!
+    typename: String!
+    email: String!
+    name: String!
+    country: String!
+    company: String!
+    external: Boolean!
+    allocatedTours: [ID!]!
+  ): String @aws_auth(cognito_groups: ["MasterAdmin", "ClusterAdmin"])
+  editUser(
+    id: String!
+    email: String!
+    name: String!
+    country: String!
+    company: String!
+    external: Boolean!
+    allocatedTours: [ID!]!
+  ): String @aws_auth(cognito_groups: ["MasterAdmin", "ClusterAdmin"])
+  deleteUser(id: String!): String
+    @aws_auth(cognito_groups: ["MasterAdmin", "ClusterAdmin"])
+  toggleUser(id: String!, enable: Boolean!): String
+    @aws_auth(cognito_groups: ["MasterAdmin", "ClusterAdmin"])
+  sendSupportMessage(
+    email: String!
+    subject: String!
+    message: String!
+  ): AWSTimestamp
+}
+
+type Query {
+  getUserReport(range: DateRange): UserReportConnection
+  getSingleTourReport(
+    tourId: ID!
+    range: DateRange!
+  ): SingleTourReportConnection
+  getTourReport(range: DateRange!): TourReportConnection
+  getCurrentUser: User
+  getAllTours: [Tour]
+  getUser(username: String!): User
+    @aws_auth(cognito_groups: ["MasterAdmin", "ClusterAdmin"])
+  getAllUsers(
+    limit: Int
+    nextToken: String
+    filter: FilterInput
+  ): UserConnection @aws_auth(cognito_groups: ["MasterAdmin", "ClusterAdmin"])
+  getLatestRecord(range: DateRange!): Latest!
+    @aws_auth(cognito_groups: ["MasterAdmin", "ClusterAdmin"])
+  getActivityLog(limit: Int, nextToken: AWSJSON): LogConnection
+    @aws_auth(cognito_groups: ["MasterAdmin", "ClusterAdmin"])
+}
+
+type UserReportConnection {
+  users: [UserReportItem]
+  total: Int
+}
+
+type UserReportItem {
+  username: String
+  loginCount: Int
+}
+
+type SingleTourReportConnection {
+  tourId: ID!
+  tourName: String!
+  tours: [SingleTourReportItem]
+  total: Int
+}
+
+type SingleTourReportItem {
+  accessedDate: AWSDateTime
+  username: String
+}
+
+type TourReportConnection {
+  tours: [TourReportItem]
+  total: Int
+}
+
+type TourReportItem {
+  tourId: ID!
+  tourName: String
+  visitCount: Int
+}
+
+type UserConnection {
+  item: [User]
+  nextToken: String
+}
+
+interface User {
+  id: String!
+  name: String!
+  email: String!
+  country: String!
+  company: Company!
+  enabled: Boolean!
+  createdAt: AWSDateTime!
+  signedInAt: AWSDateTime
+  meetings(nextToken: String, limit: Int): MeetingConnection
+  tours(nextToken: String, limit: Int): AllocatedTourConnection
+}
+
+type MasterAdmin implements User {
+  id: String!
+  name: String!
+  email: String!
+  country: String!
+  company: Company!
+  enabled: Boolean!
+  createdAt: AWSDateTime!
+  signedInAt: AWSDateTime
+  meetings(nextToken: String, limit: Int): MeetingConnection
+  tours(nextToken: String, limit: Int): AllocatedTourConnection
+}
+
+type ClusterAdmin implements User {
+  id: String!
+  name: String!
+  email: String!
+  country: String!
+  company: Company!
+  enabled: Boolean!
+  createdAt: AWSDateTime!
+  signedInAt: AWSDateTime
+  meetings(nextToken: String, limit: Int): MeetingConnection
+  tours(nextToken: String, limit: Int): AllocatedTourConnection
+}
+
+type Visitor implements User {
+  id: String!
+  name: String!
+  email: String!
+  country: String!
+  company: Company!
+  enabled: Boolean!
+  createdAt: AWSDateTime!
+  signedInAt: AWSDateTime
+  meetings(nextToken: String, limit: Int): MeetingConnection
+  tours(nextToken: String, limit: Int): AllocatedTourConnection
+}
+
+type Tour {
+  id: ID!
+  clusterId: ID!
+  cluster: Cluster!
+  name: String!
+  url: String!
+  thumbnail: String!
+  coordinates: [Float]
+}
+
+type TourConnection {
+  item: [Tour]
+  nextToken: String
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}

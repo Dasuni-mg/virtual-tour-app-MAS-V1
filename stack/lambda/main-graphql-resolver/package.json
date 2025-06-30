@@ -1,0 +1,9 @@
+{
+  "name": "main-graphql-resolver",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "ISC",
+  "dependencies": {
+    "luxon": "^3.1.1"
+  }
+}

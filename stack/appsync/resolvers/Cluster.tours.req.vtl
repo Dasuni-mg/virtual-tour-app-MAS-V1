@@ -1,0 +1,13 @@
+{
+  "version" : "2017-02-28",
+  "operation" : "Query",
+  "query" : {
+    "expression": "clusterId = :id",
+    "expressionValues" : {
+      ":id" : $util.dynamodb.toDynamoDBJson($ctx.source.id)
+    }
+  },
+  "limit": $util.defaultIfNull(${ctx.args.limit}, 20),
+  "nextToken": $util.toJson($util.defaultIfNullOrBlank($ctx.args.nextToken, null)),
+  "index": "index-cluster-id"
+}

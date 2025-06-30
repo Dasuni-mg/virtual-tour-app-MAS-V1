@@ -1,0 +1,36 @@
+{
+  "name": "mas-insight-vercel",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.2.0",
+    "@fortawesome/free-solid-svg-icons": "^6.2.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@headlessui/react": "^1.7.0",
+    "@react-google-maps/api": "^2.18.1",
+    "@vis.gl/react-google-maps": "^0.4.1",
+    "aws-amplify": "^4.3.30",
+    "d3": "^7.8.4",
+    "luxon": "^3.0.4",
+    "next": "12.2.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-responsive-carousel": "^3.2.23",
+    "react-select": "^5.7.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.8",
+    "csv-loader": "^3.0.5",
+    "eslint": "8.21.0",
+    "eslint-config-next": "12.2.4",
+    "postcss": "^8.4.16",
+    "tailwindcss": "^3.1.8",
+    "tsv-loader": "^1.0.5"
+  }
+}
